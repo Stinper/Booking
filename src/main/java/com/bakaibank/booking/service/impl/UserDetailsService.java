@@ -1,4 +1,4 @@
-package com.bakaibank.booking.service;
+package com.bakaibank.booking.service.impl;
 
 import com.bakaibank.booking.entity.Employee;
 import com.bakaibank.booking.entity.Role;
