@@ -1,6 +1,9 @@
-package com.bakaibank.booking.dto;
+package com.bakaibank.booking.dto.employee;
 
 import com.bakaibank.booking.entity.Employee;
+import com.bakaibank.booking.entity.Position;
+import com.bakaibank.booking.entity.Team;
+import com.bakaibank.booking.validation.annotations.ForeignKey;
 import com.bakaibank.booking.validation.annotations.Password;
 import com.bakaibank.booking.validation.annotations.Unique;
 import jakarta.validation.constraints.Email;
@@ -33,4 +36,10 @@ public class CreateEmployeeDTO {
     private String lastName;
 
     private String middleName;
+
+    @ForeignKey(message = "Должность с таким ID не найдена", entity = Position.class)
+    private Long positionId;
+
+    @ForeignKey(message = "Команда с таким ID не найдена", entity = Team.class)
+    private Long teamId;
 }

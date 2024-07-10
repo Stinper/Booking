@@ -1,5 +1,7 @@
-package com.bakaibank.booking.dto;
+package com.bakaibank.booking.dto.employee;
 
+import com.bakaibank.booking.dto.position.PositionDTO;
+import com.bakaibank.booking.dto.team.TeamDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,4 +15,6 @@ public class EmployeeDTO {
     private String firstName;
     private String lastName;
     private String middleName;
+    private PositionDTO position;
+    private TeamDTO team;
 }

@@ -1,7 +1,7 @@
 package com.bakaibank.booking.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +9,7 @@ import java.util.List;
 @Entity
 @Table(name = "employees")
 @Data
+@NoArgsConstructor
 public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,6 +41,26 @@ public class Employee {
     )
     private List<Role> roles = new ArrayList<>();
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "position_id")
+    private Position position;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "team_id")
+    private Team team;
+
     @OneToMany(mappedBy = "employee", fetch = FetchType.LAZY)
     private List<Booking> bookings = new ArrayList<>();
+
+    public Employee(String username, String email, String password, String firstName, String lastName,
+                    String middleName, Position position, Team team) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.middleName = middleName;
+        this.position = position;
+        this.team = team;
+    }
 }

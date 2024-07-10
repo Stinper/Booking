@@ -1,7 +1,7 @@
 package com.bakaibank.booking.controller;
 
-import com.bakaibank.booking.dto.CreateEmployeeDTO;
-import com.bakaibank.booking.dto.EmployeeDTO;
+import com.bakaibank.booking.dto.employee.CreateEmployeeDTO;
+import com.bakaibank.booking.dto.employee.EmployeeDTO;
 import com.bakaibank.booking.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

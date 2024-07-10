@@ -3,7 +3,7 @@ package com.bakaibank.booking.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "bookings")
@@ -21,13 +21,7 @@ public class Booking {
     @JoinColumn(name = "place_id", nullable = false)
     private Place place;
 
-    @Column(name = "date_from", nullable = false)
-    private LocalDateTime dateFrom;
+    @Column(name = "booking_date", nullable = false)
+    private LocalDate bookingDate;
 
-    @Column(name = "date_to", nullable = false)
-    private LocalDateTime dateTo;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "type_id", nullable = false)
-    private BookingType type;
 }
