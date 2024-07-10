@@ -1,6 +1,7 @@
 package com.bakaibank.booking.config;
 
 import com.bakaibank.booking.dto.employee.converters.EmployeeConvertersManager;
+import com.bakaibank.booking.dto.place.converters.PlaceConvertersManager;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -21,6 +22,10 @@ public class ApplicationConfig {
 
         modelMapper.addConverter(employeeConvertersManager.employeeToEmployeeDTOConverter());
         modelMapper.addConverter(employeeConvertersManager.createEmployeeDTOToEmployeeConverter());
+
+        modelMapper.addConverter(PlaceConvertersManager.placeToPlaceDTOConverter());
+        modelMapper.addConverter(PlaceConvertersManager.placeToPlaceWithBookingDTOConverter());
+        modelMapper.addConverter(PlaceConvertersManager.bookingToNestedBookingDTOConverter());
 
         return modelMapper;
     }

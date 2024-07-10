@@ -8,6 +8,23 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "bookings")
 @Data
+@NamedEntityGraphs({
+        @NamedEntityGraph(
+                name = "Booking.withFullEmployeeInfo",
+                attributeNodes = {
+                        @NamedAttributeNode(value = "employee", subgraph = "employee-position-team")
+                },
+                subgraphs = {
+                        @NamedSubgraph(
+                                name = "employee-position-team",
+                                attributeNodes = {
+                                        @NamedAttributeNode("position"),
+                                        @NamedAttributeNode("team")
+                                }
+                        )
+                }
+        )
+})
 public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

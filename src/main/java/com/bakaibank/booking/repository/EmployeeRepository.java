@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
+    @EntityGraph(attributePaths = "roles", type = EntityGraph.EntityGraphType.LOAD)
     Optional<Employee> findByUsernameIgnoreCase(String username);
 
     @EntityGraph(attributePaths = {"position", "team"}, type = EntityGraph.EntityGraphType.LOAD)
