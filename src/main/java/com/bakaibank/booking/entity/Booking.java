@@ -2,12 +2,14 @@ package com.bakaibank.booking.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "bookings")
 @Data
+@NoArgsConstructor
 @NamedEntityGraphs({
         @NamedEntityGraph(
                 name = "Booking.withFullEmployeeInfo",
@@ -41,4 +43,9 @@ public class Booking {
     @Column(name = "booking_date", nullable = false)
     private LocalDate bookingDate;
 
+    public Booking(Employee employee, Place place, LocalDate bookingDate) {
+        this.employee = employee;
+        this.place = place;
+        this.bookingDate = bookingDate;
+    }
 }

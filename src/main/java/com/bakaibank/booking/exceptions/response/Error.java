@@ -3,10 +3,9 @@ package com.bakaibank.booking.exceptions.response;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.util.List;
-
 @Getter
 @AllArgsConstructor
-public class ValidationErrorResponse {
-    private final List<Error> errors;
+public class Error {
+    private final String code;
+    private final String errorMessage;
 }

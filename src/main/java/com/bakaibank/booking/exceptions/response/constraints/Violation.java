@@ -1,4 +1,4 @@
-package com.bakaibank.booking.exceptions.response;
+package com.bakaibank.booking.exceptions.response.constraints;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

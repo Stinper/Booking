@@ -29,27 +29,29 @@ public class EmployeeConvertersManager {
         this.teamRepository = teamRepository;
     }
 
-    public Converter<Employee, EmployeeDTO> employeeToEmployeeDTOConverter() {
+    public static Converter<Employee, EmployeeDTO> employeeToEmployeeDTOConverter() {
         return new Converter<>() {
             @Override
             public EmployeeDTO convert(MappingContext<Employee, EmployeeDTO> mappingContext) {
-                Employee employee = mappingContext.getSource();
-
-                return new EmployeeDTO(
-                        employee.getId(),
-                        employee.getUsername(),
-                        employee.getFirstName(),
-                        employee.getLastName(),
-                        employee.getMiddleName(),
-                        Optional.ofNullable(employee.getPosition())
-                                .map(position -> new PositionDTO(position.getId(), position.getName()))
-                                .orElse(null),
-                        Optional.ofNullable(employee.getTeam())
-                                .map(team -> new TeamDTO(team.getId(), team.getName()))
-                                .orElse(null)
-                );
+                return mapEmployeeToEmployeeDTO(mappingContext.getSource());
             }
         };
+    }
+
+    public static EmployeeDTO mapEmployeeToEmployeeDTO(Employee employee) {
+        return new EmployeeDTO(
+                employee.getId(),
+                employee.getUsername(),
+                employee.getFirstName(),
+                employee.getLastName(),
+                employee.getMiddleName(),
+                Optional.ofNullable(employee.getPosition())
+                        .map(position -> new PositionDTO(position.getId(), position.getName()))
+                        .orElse(null),
+                Optional.ofNullable(employee.getTeam())
+                        .map(team -> new TeamDTO(team.getId(), team.getName()))
+                        .orElse(null)
+        );
     }
 
     public Converter<CreateEmployeeDTO, Employee> createEmployeeDTOToEmployeeConverter() {

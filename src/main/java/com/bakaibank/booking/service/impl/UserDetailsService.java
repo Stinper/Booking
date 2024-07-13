@@ -1,5 +1,6 @@
 package com.bakaibank.booking.service.impl;
 
+import com.bakaibank.booking.core.BookingUserDetailsImpl;
 import com.bakaibank.booking.entity.Employee;
 import com.bakaibank.booking.entity.Role;
 import com.bakaibank.booking.repository.EmployeeRepository;
@@ -28,7 +29,8 @@ public class UserDetailsService implements org.springframework.security.core.use
         Employee employee = employeeRepository.findByUsernameIgnoreCase(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Пользователь с именем " + username + " не найден"));
 
-        return new org.springframework.security.core.userdetails.User(
+        return new BookingUserDetailsImpl(
+                employee.getId(),
                 employee.getUsername(),
                 employee.getPassword(),
                 mapRolesToGrantedAuthorities(employee.getRoles())

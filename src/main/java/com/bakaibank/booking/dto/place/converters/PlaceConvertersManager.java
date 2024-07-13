@@ -1,6 +1,7 @@
 package com.bakaibank.booking.dto.place.converters;
 
 import com.bakaibank.booking.dto.employee.EmployeeDTO;
+import com.bakaibank.booking.dto.employee.converters.EmployeeConvertersManager;
 import com.bakaibank.booking.dto.place.PlaceDTO;
 import com.bakaibank.booking.dto.place.PlaceWithBookingDTO;
 import com.bakaibank.booking.dto.position.PositionDTO;
@@ -48,23 +49,10 @@ public class PlaceConvertersManager {
             @Override
             public PlaceWithBookingDTO.NestedBookingDTO convert(MappingContext<Booking, PlaceWithBookingDTO.NestedBookingDTO> mappingContext) {
                 Booking booking = mappingContext.getSource();
-                Employee employee = booking.getEmployee();
 
                 return new PlaceWithBookingDTO.NestedBookingDTO(
                         booking.getBookingDate(),
-                        new EmployeeDTO(
-                                employee.getId(),
-                                employee.getUsername(),
-                                employee.getFirstName(),
-                                employee.getLastName(),
-                                employee.getMiddleName(),
-                                Optional.ofNullable(employee.getPosition())
-                                        .map(position -> new PositionDTO(position.getId(), position.getName()))
-                                        .orElse(null),
-                                Optional.ofNullable(employee.getTeam())
-                                        .map(team -> new TeamDTO(team.getId(), team.getName()))
-                                        .orElse(null)
-                        )
+                        EmployeeConvertersManager.mapEmployeeToEmployeeDTO(booking.getEmployee())
                 );
             }
         };
