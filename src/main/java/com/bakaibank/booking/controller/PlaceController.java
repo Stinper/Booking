@@ -1,5 +1,6 @@
 package com.bakaibank.booking.controller;
 
+import com.bakaibank.booking.core.security.AdminRoleRequired;
 import com.bakaibank.booking.dto.place.CreatePlaceDTO;
 import com.bakaibank.booking.dto.place.PlaceDTO;
 import com.bakaibank.booking.dto.place.PlaceWithBookingDTO;
@@ -42,11 +43,13 @@ public class PlaceController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @AdminRoleRequired
     public PlaceDTO createPlace(@RequestBody CreatePlaceDTO createPlaceDTO) {
         return placeService.save(createPlaceDTO);
     }
 
     @DeleteMapping("/{id}")
+    @AdminRoleRequired
     public ResponseEntity<?> deletePlaceById(@PathVariable Long id) {
         return placeService.findById(id)
                 .map(place -> {

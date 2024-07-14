@@ -1,5 +1,6 @@
 package com.bakaibank.booking.controller;
 
+import com.bakaibank.booking.core.security.AdminRoleRequired;
 import com.bakaibank.booking.dto.employee.CreateEmployeeDTO;
 import com.bakaibank.booking.dto.employee.EmployeeDTO;
 import com.bakaibank.booking.service.EmployeeService;
@@ -39,6 +40,7 @@ public class EmployeeController {
     }
 
     @DeleteMapping("/{id}")
+    @AdminRoleRequired
     public ResponseEntity<?> deleteEmployeeById(@PathVariable Long id) {
         return employeeService.findById(id)
                 .map(employee -> {
