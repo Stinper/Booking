@@ -1,21 +1,27 @@
 package com.bakaibank.booking.validation;
 
 import com.bakaibank.booking.dto.booking.CreateBookingDTO;
+import com.bakaibank.booking.entity.Weekend;
 import com.bakaibank.booking.repository.BookingRepository;
+import com.bakaibank.booking.repository.WeekendRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.Collections;
+import java.util.List;
 
 @Component
 public class BookingValidator implements Validator {
     private final BookingRepository bookingRepository;
+
+    private final WeekendRepository weekendRepository;
 
     @Value("${booking.open.time}")
     private String bookingOpenTimePattern;
@@ -27,8 +33,9 @@ public class BookingValidator implements Validator {
     private int bookingAllowedDaysAhead;
 
     @Autowired
-    public BookingValidator(BookingRepository bookingRepository) {
+    public BookingValidator(BookingRepository bookingRepository, WeekendRepository weekendRepository) {
         this.bookingRepository = bookingRepository;
+        this.weekendRepository = weekendRepository;
     }
 
     @Override
@@ -71,7 +78,9 @@ public class BookingValidator implements Validator {
     }
 
     private boolean validateBookingDate(LocalDate bookingDate, Errors errors) {
-        if(bookingDate.isBefore(LocalDate.now()) || bookingDate.equals(LocalDate.now())) {
+        LocalDate now = LocalDate.now();
+
+        if(bookingDate.isBefore(now) || bookingDate.equals(now)) {
             errors.reject("invalidBookingDate", "Нельзя забронировать место на прошедшую или текущую дату");
             return false;
         }
@@ -81,20 +90,32 @@ public class BookingValidator implements Validator {
             return false;
         }
 
-        if(bookingDate.isAfter(LocalDate.now().plusDays(bookingAllowedDaysAhead))) {
-            //TODO: После того, как привяжем рабочий календарь, нужно позволить бронировать на
-            // следующий рабочий день, если между текущим и следующим есть выходные дни и между ними больше дней, чем {bookingAllowedDaysAhead}
-            errors.reject("tooMuchDaysAhead", "Бронирование доступно максимум на " + bookingAllowedDaysAhead + " день вперед");
-            return false;
+        if(ChronoUnit.DAYS.between(now, bookingDate) > bookingAllowedDaysAhead) {
+            LocalDate nextWorkingDate = getNextWorkingDate(now);
+
+            if(!bookingDate.equals(nextWorkingDate)) {
+                errors.reject("tooMuchDaysAhead", "Вы можете сделать бронь максимум на " + nextWorkingDate);
+                return false;
+            }
+
         }
 
         return true;
     }
 
-    private boolean isWeekend(LocalDate bookingDate) {
-        //TODO: Потом привязать сюда календарь рабочих дней
+    private boolean isWeekend(LocalDate date) {
+        return weekendRepository.existsByDate(date);
+    }
 
-        DayOfWeek dayOfWeek = bookingDate.getDayOfWeek();
-        return dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY;
+    private LocalDate getNextWorkingDate(LocalDate currentDate) {
+        List<LocalDate> weekends = weekendRepository.findAllByDateIsGreaterThanEqualOrderByDateAsc(currentDate).stream()
+                .map(Weekend::getDate)
+                .toList();
+
+        do
+            currentDate = currentDate.plusDays(1);
+        while (Collections.binarySearch(weekends, currentDate) >= 0);
+
+        return currentDate;
     }
 }
