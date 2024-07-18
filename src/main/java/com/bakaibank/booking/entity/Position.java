@@ -2,6 +2,8 @@ package com.bakaibank.booking.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +11,8 @@ import java.util.List;
 @Entity
 @Table(name = "positions")
 @Data
+@NoArgsConstructor
+@ToString
 public class Position {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,4 +23,8 @@ public class Position {
 
     @OneToMany(mappedBy = "position", fetch = FetchType.LAZY)
     private List<Employee> employees = new ArrayList<>();
+
+    public Position(String name) {
+        this.name = name;
+    }
 }

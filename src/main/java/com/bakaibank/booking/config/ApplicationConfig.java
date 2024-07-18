@@ -5,6 +5,8 @@ import com.bakaibank.booking.dto.booking.rooms.converters.MeetingRoomBookingConv
 import com.bakaibank.booking.dto.employee.converters.EmployeeConvertersManager;
 import com.bakaibank.booking.dto.meetingroom.converters.MeetingRoomConvertersManager;
 import com.bakaibank.booking.dto.place.converters.PlaceConvertersManager;
+import com.bakaibank.booking.dto.position.converters.PositionConvertersManager;
+import com.bakaibank.booking.dto.team.converters.TeamConvertersManager;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
@@ -36,6 +38,12 @@ public class ApplicationConfig {
 
         modelMapper.addConverter(MeetingRoomBookingConvertersManager.meetingRoomBookingToMeetingRoomBookingDTOConverter());
         modelMapper.addConverter(meetingRoomBookingConvertersManager.createMeetingRoomBookingDTOToMeetingRoomBookingConverter());
+
+        modelMapper.addConverter(PositionConvertersManager.positionToPositionDTOConverter());
+        modelMapper.addConverter(PositionConvertersManager.createPositionDTOToPositionConverter());
+
+        modelMapper.addConverter(TeamConvertersManager.teamToTeamDTOConverter());
+        modelMapper.addConverter(TeamConvertersManager.createTeamDTOToTeamConverter());
 
         return modelMapper;
     }

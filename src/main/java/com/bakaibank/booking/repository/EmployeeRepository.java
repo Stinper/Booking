@@ -26,4 +26,8 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
     @Query("SELECT e.username FROM Employee e WHERE e.username IN :usernames")
     List<String> findExistingUsernames(@Param("usernames") Collection<String> usernames);
+
+    boolean existsByPosition_Id(Long id);
+
+    boolean existsByTeam_Id(Long id);
 }

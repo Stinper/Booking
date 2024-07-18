@@ -1,5 +1,6 @@
 package com.bakaibank.booking.exceptions.handlers;
 
+import com.bakaibank.booking.exceptions.RelatedEntityExistsException;
 import com.bakaibank.booking.exceptions.ValidationException;
 import com.bakaibank.booking.exceptions.response.Error;
 import com.bakaibank.booking.exceptions.response.ValidationErrorResponse;
@@ -11,7 +12,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -43,5 +46,19 @@ public class GlobalExceptionHandler {
                 .toList();
 
         return new ValidationErrorResponse(errors);
+    }
+
+    @ExceptionHandler(RelatedEntityExistsException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public Map<String, String> handleRelatedEntityExistsException(RelatedEntityExistsException e) {
+        return MapErrorMessage.of("error", e.getMessage());
+    }
+
+    private static class MapErrorMessage {
+        public static Map<String, String> of(String key, String value) {
+            Map<String, String> error = new HashMap<>();
+            error.put(key, value);
+            return error;
+        }
     }
 }
