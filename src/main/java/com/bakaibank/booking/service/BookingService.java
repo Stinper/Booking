@@ -1,8 +1,8 @@
 package com.bakaibank.booking.service;
 
 import com.bakaibank.booking.core.BookingUserDetails;
-import com.bakaibank.booking.dto.booking.BookingDTO;
-import com.bakaibank.booking.dto.booking.CreateBookingDTO;
+import com.bakaibank.booking.dto.booking.places.BookingDTO;
+import com.bakaibank.booking.dto.booking.places.CreateBookingDTO;
 import jakarta.validation.Valid;
 
 import java.time.LocalDate;

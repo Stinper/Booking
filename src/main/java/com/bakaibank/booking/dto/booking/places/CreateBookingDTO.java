@@ -1,4 +1,4 @@
-package com.bakaibank.booking.dto.booking;
+package com.bakaibank.booking.dto.booking.places;
 
 import com.bakaibank.booking.entity.Place;
 import com.bakaibank.booking.validation.annotations.ForeignKey;

@@ -1,8 +1,8 @@
 package com.bakaibank.booking.controller;
 
 import com.bakaibank.booking.core.BookingUserDetails;
-import com.bakaibank.booking.dto.booking.BookingDTO;
-import com.bakaibank.booking.dto.booking.CreateBookingDTO;
+import com.bakaibank.booking.dto.booking.places.BookingDTO;
+import com.bakaibank.booking.dto.booking.places.CreateBookingDTO;
 import com.bakaibank.booking.service.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -14,7 +14,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/bookings")
+@RequestMapping("/api/bookings/places")
 public class BookingController {
     private final BookingService bookingService;
 

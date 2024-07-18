@@ -12,8 +12,9 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @NamedEntityGraphs({
         @NamedEntityGraph(
-                name = "Booking.withFullEmployeeInfo",
+                name = "Booking.withPlaceAndFullEmployeeInfo",
                 attributeNodes = {
+                        @NamedAttributeNode("place"),
                         @NamedAttributeNode(value = "employee", subgraph = "employee-position-team")
                 },
                 subgraphs = {

@@ -1,8 +1,8 @@
 package com.bakaibank.booking.service.impl;
 
 import com.bakaibank.booking.core.BookingUserDetails;
-import com.bakaibank.booking.dto.booking.BookingDTO;
-import com.bakaibank.booking.dto.booking.CreateBookingDTO;
+import com.bakaibank.booking.dto.booking.places.BookingDTO;
+import com.bakaibank.booking.dto.booking.places.CreateBookingDTO;
 import com.bakaibank.booking.entity.Booking;
 import com.bakaibank.booking.exceptions.ValidationException;
 import com.bakaibank.booking.repository.BookingRepository;

@@ -1,7 +1,7 @@
-package com.bakaibank.booking.dto.booking.converters;
+package com.bakaibank.booking.dto.booking.places.converters;
 
-import com.bakaibank.booking.dto.booking.BookingDTO;
-import com.bakaibank.booking.dto.booking.CreateBookingDTO;
+import com.bakaibank.booking.dto.booking.places.BookingDTO;
+import com.bakaibank.booking.dto.booking.places.CreateBookingDTO;
 import com.bakaibank.booking.dto.employee.converters.EmployeeConvertersManager;
 import com.bakaibank.booking.entity.Booking;
 import com.bakaibank.booking.entity.Employee;
