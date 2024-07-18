@@ -3,10 +3,10 @@ package com.bakaibank.booking.dto.employee;
 import com.bakaibank.booking.entity.Employee;
 import com.bakaibank.booking.entity.Position;
 import com.bakaibank.booking.entity.Team;
+import com.bakaibank.booking.validation.annotations.BakaiEmail;
 import com.bakaibank.booking.validation.annotations.ForeignKey;
 import com.bakaibank.booking.validation.annotations.Password;
 import com.bakaibank.booking.validation.annotations.Unique;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,7 +21,7 @@ public class CreateEmployeeDTO {
     private String username;
 
     @NotBlank(message = "Почта должна быть указана")
-    @Email(message = "Почта должна быть корректной")
+    @BakaiEmail
     @Unique(message = "Пользователь с такой почтой уже зарегистрирован", field = "email", entity = Employee.class)
     private String email;
 
