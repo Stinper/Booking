@@ -7,10 +7,13 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface PlaceRepository extends JpaRepository<Place, Long> {
 
     @Query("SELECT p, CASE WHEN EXISTS (SELECT b FROM Booking b WHERE b.place = p AND b.bookingDate = :date) THEN true ELSE false END " +
             "FROM Place p")
     List<Object[]> findAllWithBookingByDate(@Param("date") LocalDate date);
+
+    Optional<Place> findByCodeIgnoreCase(String code);
 }

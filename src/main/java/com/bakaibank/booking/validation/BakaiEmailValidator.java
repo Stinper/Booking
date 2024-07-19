@@ -16,6 +16,8 @@ public class BakaiEmailValidator implements ConstraintValidator<BakaiEmail, Stri
 
     @Override
     public boolean isValid(String email, ConstraintValidatorContext constraintValidatorContext) {
+        if(email == null) return true; //Должно быть обработано другой аннотацией
+
         String errorMessage;
         Pattern emailPattern;
 

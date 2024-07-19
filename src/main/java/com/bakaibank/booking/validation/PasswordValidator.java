@@ -25,6 +25,8 @@ public class PasswordValidator implements ConstraintValidator<Password, String> 
 
     @Override
     public boolean isValid(String password, ConstraintValidatorContext constraintValidatorContext) {
+        if (password == null) return true; //Должно быть обработано другой аннотацией
+
         boolean passwordValid = true;
         int lettersCount = 0, upperLettersCount = 0;
         StringBuilder errorMessage = new StringBuilder();

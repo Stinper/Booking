@@ -38,14 +38,19 @@ public class BookingValidator extends AbstractBookingValidator implements Valida
 
         if(!validateBookingDate(bookingDate, placeBookingAllowedDaysAhead, errors)) return;
 
-
-        if(bookingRepository.existsByPlace_IdAndBookingDate(createBookingDTO.getPlaceId(), bookingDate)) {
-            errors.reject("placeIsAlreadyTaken", "Выбранное место уже забронировано на эту дату");
-            return;
-        }
+        if(!validatePlaceIsFree(createBookingDTO.getPlaceId(), bookingDate, errors)) return;
 
         if(bookingRepository.existsByEmployee_IdAndBookingDate(createBookingDTO.getEmployeeId(), bookingDate)) {
             errors.reject("alreadyBookedAnotherPlace", "Вы уже забронировали место на выбранную дату");
         }
+    }
+
+    public boolean validatePlaceIsFree(Long placeId, LocalDate bookingDate, Errors errors) {
+        if(bookingRepository.existsByPlace_IdAndBookingDate(placeId, bookingDate)) {
+            errors.reject("placeIsAlreadyTaken", "Выбранное место уже забронировано на эту дату");
+            return false;
+        }
+
+        return true;
     }
 }

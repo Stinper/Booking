@@ -3,10 +3,12 @@ package com.bakaibank.booking.controller;
 import com.bakaibank.booking.core.BookingUserDetails;
 import com.bakaibank.booking.dto.booking.places.BookingDTO;
 import com.bakaibank.booking.dto.booking.places.CreateBookingDTO;
+import com.bakaibank.booking.dto.booking.places.UpdateBookingDTO;
 import com.bakaibank.booking.service.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,7 +45,14 @@ public class BookingController {
         return bookingService.save(createBookingDTO, userDetails);
     }
 
+    @PatchMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN') or @bookingSecurityService.canUpdateBooking(#id, principal)")
+    public BookingDTO updateBookingById(@PathVariable Long id, @RequestBody UpdateBookingDTO updateBookingDTO) {
+        return bookingService.update(id, updateBookingDTO);
+    }
+
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN') or @bookingSecurityService.canDeleteBooking(#id, principal)")
     public ResponseEntity<?> deleteBookingById(@PathVariable Long id) {
         return bookingService.findById(id)
                 .map(booking -> {
