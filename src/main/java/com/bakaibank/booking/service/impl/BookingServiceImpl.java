@@ -10,7 +10,7 @@ import com.bakaibank.booking.exceptions.ValidationException;
 import com.bakaibank.booking.repository.BookingRepository;
 import com.bakaibank.booking.repository.PlaceRepository;
 import com.bakaibank.booking.service.BookingService;
-import com.bakaibank.booking.validation.BookingValidator;
+import com.bakaibank.booking.validation.PlaceBookingValidator;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,17 +34,17 @@ public class BookingServiceImpl implements BookingService {
 
     private final ModelMapper modelMapper;
 
-    private final BookingValidator bookingValidator;
+    private final PlaceBookingValidator placeBookingValidator;
 
     @Autowired
     public BookingServiceImpl(BookingRepository bookingRepository,
                               PlaceRepository placeRepository,
                               ModelMapper modelMapper,
-                              BookingValidator bookingValidator) {
+                              PlaceBookingValidator placeBookingValidator) {
         this.bookingRepository = bookingRepository;
         this.placeRepository = placeRepository;
         this.modelMapper = modelMapper;
-        this.bookingValidator = bookingValidator;
+        this.placeBookingValidator = placeBookingValidator;
     }
     @Override
     public List<BookingDTO> findAllByDate(LocalDate date) {
@@ -65,7 +65,7 @@ public class BookingServiceImpl implements BookingService {
         createBookingDTO.setEmployeeId(userDetails.getId());
 
         Errors errors = new BeanPropertyBindingResult(createBookingDTO, "bookingErrors");
-        bookingValidator.validate(createBookingDTO, errors);
+        placeBookingValidator.validate(createBookingDTO, errors);
 
         if (errors.hasErrors())
             throw new ValidationException(errors);
@@ -83,7 +83,7 @@ public class BookingServiceImpl implements BookingService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         Errors errors = new BeanPropertyBindingResult(updateBookingDTO, "updateBookingErrors");
-        bookingValidator.validatePlaceIsFree(place.getId(), booking.getBookingDate(), errors);
+        placeBookingValidator.validatePlaceIsFree(place.getId(), booking.getBookingDate(), errors);
 
         if(errors.hasErrors())
             throw new ValidationException(errors);

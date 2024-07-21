@@ -21,6 +21,9 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Query("SELECT b FROM Booking b WHERE b.id = :id")
     Optional<Booking> findByIdWithFullEmployeeInfo(@Param("id") Long id);
 
+    @Query("SELECT emp.username FROM Booking b JOIN b.employee emp WHERE b.id = :id")
+    Optional<String> findBookingCreatorByBookingId(@Param("id") Long id);
+
     boolean existsByPlace_IdAndBookingDate(Long placeId, LocalDate bookingDate);
 
     boolean existsByEmployee_IdAndBookingDate(Long employeeId, LocalDate bookingDate);

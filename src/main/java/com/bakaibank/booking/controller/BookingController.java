@@ -46,13 +46,13 @@ public class BookingController {
     }
 
     @PatchMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or @bookingSecurityService.canUpdateBooking(#id, principal)")
+    @PreAuthorize("hasRole('ADMIN') or @placeBookingSecurityService.canUpdateBooking(#id, principal)")
     public BookingDTO updateBookingById(@PathVariable Long id, @RequestBody UpdateBookingDTO updateBookingDTO) {
         return bookingService.update(id, updateBookingDTO);
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or @bookingSecurityService.canDeleteBooking(#id, principal)")
+    @PreAuthorize("hasRole('ADMIN') or @placeBookingSecurityService.canDeleteBooking(#id, principal)")
     public ResponseEntity<?> deleteBookingById(@PathVariable Long id) {
         return bookingService.findById(id)
                 .map(booking -> {

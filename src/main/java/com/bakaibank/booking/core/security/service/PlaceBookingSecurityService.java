@@ -8,20 +8,21 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
-public class BookingSecurityService {
+public class PlaceBookingSecurityService {
     private final BookingRepository bookingRepository;
 
-    public BookingSecurityService(BookingRepository bookingRepository) {
+    public PlaceBookingSecurityService(BookingRepository bookingRepository) {
         this.bookingRepository = bookingRepository;
     }
 
     public boolean canUpdateBooking(Long bookingId, BookingUserDetails bookingUserDetails) {
         if(bookingUserDetails == null || bookingId == null) return false;
 
-        Booking booking = bookingRepository.findByIdWithFullEmployeeInfo(bookingId)
+        String bookingCreator = bookingRepository
+                .findBookingCreatorByBookingId(bookingId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-        return booking.getEmployee().getUsername().equals(bookingUserDetails.getUsername());
+        return bookingCreator.equalsIgnoreCase(bookingUserDetails.getUsername());
     }
 
     public boolean canDeleteBooking(Long bookingId, BookingUserDetails bookingUserDetails) {

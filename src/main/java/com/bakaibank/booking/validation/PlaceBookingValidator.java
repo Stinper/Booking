@@ -12,14 +12,14 @@ import org.springframework.validation.Validator;
 import java.time.LocalDate;
 
 @Component
-public class BookingValidator extends AbstractBookingValidator implements Validator {
+public class PlaceBookingValidator extends AbstractBookingValidator implements Validator {
     private final BookingRepository bookingRepository;
 
     @Value("${booking.places.allowed.days-ahead}")
     private int placeBookingAllowedDaysAhead;
 
     @Autowired
-    public BookingValidator(BookingRepository bookingRepository, WeekendRepository weekendRepository) {
+    public PlaceBookingValidator(BookingRepository bookingRepository, WeekendRepository weekendRepository) {
         super(weekendRepository);
         this.bookingRepository = bookingRepository;
     }
