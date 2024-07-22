@@ -3,6 +3,7 @@ package com.bakaibank.booking.service.impl;
 import com.bakaibank.booking.core.BookingUserDetails;
 import com.bakaibank.booking.dto.booking.places.BookingDTO;
 import com.bakaibank.booking.dto.booking.places.CreateBookingDTO;
+import com.bakaibank.booking.dto.booking.places.PlaceBookingsStatsRequest;
 import com.bakaibank.booking.dto.booking.places.UpdateBookingDTO;
 import com.bakaibank.booking.entity.Booking;
 import com.bakaibank.booking.entity.Place;
@@ -10,6 +11,7 @@ import com.bakaibank.booking.exceptions.ValidationException;
 import com.bakaibank.booking.repository.BookingRepository;
 import com.bakaibank.booking.repository.PlaceRepository;
 import com.bakaibank.booking.service.BookingService;
+import com.bakaibank.booking.specification.PlaceBookingSpecification;
 import com.bakaibank.booking.validation.PlaceBookingValidator;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
@@ -95,5 +97,15 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public void deleteById(Long id) {
         bookingRepository.deleteById(id);
+    }
+
+    @Override
+    public List<BookingDTO> getStats(@Valid PlaceBookingsStatsRequest statsRequest) {
+        PlaceBookingSpecification placeBookingSpecification = new PlaceBookingSpecification(statsRequest);
+
+        return bookingRepository.findAll(placeBookingSpecification)
+                .stream()
+                .map(booking -> modelMapper.map(booking, BookingDTO.class))
+                .toList();
     }
 }

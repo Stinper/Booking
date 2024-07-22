@@ -1,8 +1,10 @@
 package com.bakaibank.booking.controller;
 
 import com.bakaibank.booking.core.BookingUserDetails;
+import com.bakaibank.booking.core.security.AdminRoleRequired;
 import com.bakaibank.booking.dto.booking.places.BookingDTO;
 import com.bakaibank.booking.dto.booking.places.CreateBookingDTO;
+import com.bakaibank.booking.dto.booking.places.PlaceBookingsStatsRequest;
 import com.bakaibank.booking.dto.booking.places.UpdateBookingDTO;
 import com.bakaibank.booking.service.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +39,12 @@ public class BookingController {
         return bookingService.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/stats")
+    @AdminRoleRequired
+    public List<BookingDTO> getBookingStats(@ModelAttribute PlaceBookingsStatsRequest statsRequest) {
+        return bookingService.getStats(statsRequest);
     }
 
     @PostMapping
