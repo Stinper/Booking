@@ -1,5 +1,6 @@
 package com.bakaibank.booking.exceptions.handlers;
 
+import com.bakaibank.booking.exceptions.AlreadyAuthenticatedException;
 import com.bakaibank.booking.exceptions.RelatedEntityExistsException;
 import com.bakaibank.booking.exceptions.ValidationException;
 import com.bakaibank.booking.exceptions.response.Error;
@@ -8,13 +9,12 @@ import com.bakaibank.booking.exceptions.response.constraints.ConstraintViolation
 import com.bakaibank.booking.exceptions.response.constraints.Violation;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -50,15 +50,19 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(RelatedEntityExistsException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public Map<String, String> handleRelatedEntityExistsException(RelatedEntityExistsException e) {
-        return MapErrorMessage.of("error", e.getMessage());
+    public Error handleRelatedEntityExistsException(RelatedEntityExistsException e) {
+        return new Error("relatedEntityExists", e.getMessage());
     }
 
-    private static class MapErrorMessage {
-        public static Map<String, String> of(String key, String value) {
-            Map<String, String> error = new HashMap<>();
-            error.put(key, value);
-            return error;
-        }
+    @ExceptionHandler(BadCredentialsException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Error handleBadCredentialsException(BadCredentialsException e) {
+        return new Error("badCredentials", e.getMessage());
+    }
+
+    @ExceptionHandler(AlreadyAuthenticatedException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Error handleAlreadyAuthenticatedException(AlreadyAuthenticatedException e) {
+        return new Error("alreadyAuthenticated", e.getMessage());
     }
 }
