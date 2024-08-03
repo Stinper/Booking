@@ -11,9 +11,13 @@ import java.util.Optional;
 
 public interface PlaceRepository extends JpaRepository<Place, Long> {
 
-    @Query("SELECT p, CASE WHEN EXISTS (SELECT b FROM Booking b WHERE b.place = p AND b.bookingDate = :date) THEN true ELSE false END " +
+    @Query("SELECT p, " +
+            "CASE WHEN EXISTS (SELECT b FROM Booking b JOIN b.place bp WHERE bp = p AND b.bookingDate = :date) THEN true ELSE false END, " +
+            "CASE WHEN EXISTS (SELECT pl " +
+            "FROM PlaceLock pl JOIN pl.place plp " +
+            "WHERE plp = p AND :date BETWEEN pl.lockStartDate AND pl.lockEndDate) THEN true ELSE false END " +
             "FROM Place p")
-    List<Object[]> findAllWithBookingByDate(@Param("date") LocalDate date);
+    List<Object[]> findAllWithBookingAndLockByDate(@Param("date") LocalDate date);
 
     Optional<Place> findByCodeIgnoreCase(String code);
 }

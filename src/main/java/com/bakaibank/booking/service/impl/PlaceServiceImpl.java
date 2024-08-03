@@ -3,9 +3,12 @@ package com.bakaibank.booking.service.impl;
 import com.bakaibank.booking.dto.place.CreatePlaceDTO;
 import com.bakaibank.booking.dto.place.PlaceDTO;
 import com.bakaibank.booking.dto.place.PlaceWithBookingDTO;
+import com.bakaibank.booking.dto.placelock.PlaceLockDTO;
 import com.bakaibank.booking.entity.Booking;
 import com.bakaibank.booking.entity.Place;
+import com.bakaibank.booking.entity.PlaceLock;
 import com.bakaibank.booking.repository.BookingRepository;
+import com.bakaibank.booking.repository.PlaceLockRepository;
 import com.bakaibank.booking.repository.PlaceRepository;
 import com.bakaibank.booking.service.PlaceService;
 import jakarta.validation.Valid;
@@ -24,22 +27,26 @@ public class PlaceServiceImpl implements PlaceService {
     private final PlaceRepository placeRepository;
     private final ModelMapper modelMapper;
     private final BookingRepository bookingRepository;
+    private final PlaceLockRepository placeLockRepository;
 
     @Autowired
     public PlaceServiceImpl(PlaceRepository placeRepository,
                             ModelMapper modelMapper,
-                            BookingRepository bookingRepository) {
+                            BookingRepository bookingRepository,
+                            PlaceLockRepository placeLockRepository) {
         this.placeRepository = placeRepository;
         this.modelMapper = modelMapper;
         this.bookingRepository = bookingRepository;
+        this.placeLockRepository = placeLockRepository;
     }
     @Override
     public List<PlaceDTO> findAll(LocalDate date) {
-        List<Object[]> places = placeRepository.findAllWithBookingByDate(date);
+        List<Object[]> places = placeRepository.findAllWithBookingAndLockByDate(date);
         return places.stream()
                 .map(result -> {
                     PlaceDTO dto = modelMapper.map(result[0], PlaceDTO.class);
                     dto.setHasBooking((Boolean) result[1]);
+                    dto.setLocked((Boolean) result[2]);
                     return dto;
                 })
                 .toList();
@@ -61,6 +68,12 @@ public class PlaceServiceImpl implements PlaceService {
 
             return dto;
         });
+    }
+
+    @Override
+    public Optional<PlaceLockDTO> findNearestPlaceLock(Long placeId, LocalDate date) {
+        return placeLockRepository.findNearestPlaceLockByPlaceIdAndDate(placeId, date)
+                .map(placeLock -> modelMapper.map(placeLock, PlaceLockDTO.class));
     }
 
     @Override

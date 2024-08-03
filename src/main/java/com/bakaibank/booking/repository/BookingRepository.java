@@ -32,4 +32,6 @@ public interface BookingRepository extends JpaRepository<Booking, Long>, JpaSpec
     boolean existsByPlace_IdAndBookingDate(Long placeId, LocalDate bookingDate);
 
     boolean existsByEmployee_IdAndBookingDate(Long employeeId, LocalDate bookingDate);
+
+    boolean existsByPlace_IdAndBookingDateBetween(Long placeId, LocalDate startDate, LocalDate endDate);
 }

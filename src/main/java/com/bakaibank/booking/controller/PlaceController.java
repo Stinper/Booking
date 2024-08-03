@@ -4,6 +4,7 @@ import com.bakaibank.booking.core.security.AdminRoleRequired;
 import com.bakaibank.booking.dto.place.CreatePlaceDTO;
 import com.bakaibank.booking.dto.place.PlaceDTO;
 import com.bakaibank.booking.dto.place.PlaceWithBookingDTO;
+import com.bakaibank.booking.dto.placelock.PlaceLockDTO;
 import com.bakaibank.booking.service.PlaceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -12,7 +13,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/places")
@@ -39,6 +42,28 @@ public class PlaceController {
         return placeService.findByIdAndDateWithBookingInfo(id, date != null ? date : LocalDate.now())
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    /**
+     * Ищет блокировку места, с заданным ID в заданную дату
+     * @param id ID места
+     * @param date Дата
+     */
+    @GetMapping("/{id}/locks")
+    @AdminRoleRequired
+    public ResponseEntity<?> findPlaceLock(@PathVariable Long id,
+                                           @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        if(placeService.findById(id).isEmpty())
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Collections.singletonMap("error", "Место с таким ID не найдено"));
+
+        Optional<PlaceLockDTO> placeLock = placeService.findNearestPlaceLock(id, date);
+
+        if(placeLock.isEmpty())
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Collections.singletonMap("error", "Блокировка место в заданную дату не найдена"));
+
+        return ResponseEntity.ok(placeLock);
     }
 
     @PostMapping

@@ -5,6 +5,7 @@ import com.bakaibank.booking.dto.booking.rooms.converters.MeetingRoomBookingConv
 import com.bakaibank.booking.dto.employee.converters.EmployeeConvertersManager;
 import com.bakaibank.booking.dto.meetingroom.converters.MeetingRoomConvertersManager;
 import com.bakaibank.booking.dto.place.converters.PlaceConvertersManager;
+import com.bakaibank.booking.dto.placelock.converters.PlaceLockConvertersManager;
 import com.bakaibank.booking.dto.position.converters.PositionConvertersManager;
 import com.bakaibank.booking.dto.team.converters.TeamConvertersManager;
 import lombok.RequiredArgsConstructor;
@@ -14,10 +15,11 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @RequiredArgsConstructor
-public class ApplicationConfig {
+public class ModelMapperConfig {
     private final EmployeeConvertersManager employeeConvertersManager;
     private final BookingConvertersManager bookingConvertersManager;
     private final MeetingRoomBookingConvertersManager meetingRoomBookingConvertersManager;
+    private final PlaceLockConvertersManager placeLockConvertersManager;
 
     @Bean
     public ModelMapper modelMapper() {
@@ -44,6 +46,9 @@ public class ApplicationConfig {
 
         modelMapper.addConverter(TeamConvertersManager.teamToTeamDTOConverter());
         modelMapper.addConverter(TeamConvertersManager.createTeamDTOToTeamConverter());
+
+        modelMapper.addConverter(PlaceLockConvertersManager.placeLockToPlaceLockDTOConverter());
+        modelMapper.addConverter(placeLockConvertersManager.createPlaceLockDTOToPlaceLockConverter());
 
         return modelMapper;
     }

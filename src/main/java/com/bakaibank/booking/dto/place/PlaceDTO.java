@@ -10,6 +10,7 @@ public class PlaceDTO {
     private Long id;
     private String code;
     private boolean hasBooking;
+    private boolean isLocked;
 
     public PlaceDTO(Long id, String code) {
         this.id = id;

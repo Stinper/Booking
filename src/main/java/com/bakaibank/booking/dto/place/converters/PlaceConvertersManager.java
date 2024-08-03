@@ -1,18 +1,12 @@
 package com.bakaibank.booking.dto.place.converters;
 
-import com.bakaibank.booking.dto.employee.EmployeeDTO;
 import com.bakaibank.booking.dto.employee.converters.EmployeeConvertersManager;
 import com.bakaibank.booking.dto.place.PlaceDTO;
 import com.bakaibank.booking.dto.place.PlaceWithBookingDTO;
-import com.bakaibank.booking.dto.position.PositionDTO;
-import com.bakaibank.booking.dto.team.TeamDTO;
 import com.bakaibank.booking.entity.Booking;
-import com.bakaibank.booking.entity.Employee;
 import com.bakaibank.booking.entity.Place;
 import org.modelmapper.Converter;
 import org.modelmapper.spi.MappingContext;
-
-import java.util.Optional;
 
 
 public class PlaceConvertersManager {

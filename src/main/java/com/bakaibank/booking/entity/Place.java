@@ -19,4 +19,7 @@ public class Place {
 
     @OneToMany(mappedBy = "place", fetch = FetchType.LAZY)
     private List<Booking> bookings = new ArrayList<>();
+
+    @OneToMany(mappedBy = "place", fetch = FetchType.LAZY)
+    private List<PlaceLock> placeLocks = new ArrayList<>();
 }
