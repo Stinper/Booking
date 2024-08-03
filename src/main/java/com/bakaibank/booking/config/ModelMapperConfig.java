@@ -27,6 +27,7 @@ public class ModelMapperConfig {
 
         modelMapper.addConverter(EmployeeConvertersManager.employeeToEmployeeDTOConverter());
         modelMapper.addConverter(employeeConvertersManager.createEmployeeDTOToEmployeeConverter());
+        modelMapper.addConverter(EmployeeConvertersManager.employeeToEmployeeRolesDTOConverter());
 
         modelMapper.addConverter(PlaceConvertersManager.placeToPlaceDTOConverter());
         modelMapper.addConverter(PlaceConvertersManager.placeToPlaceWithBookingDTOConverter());

@@ -2,10 +2,12 @@ package com.bakaibank.booking.dto.employee.converters;
 
 import com.bakaibank.booking.dto.employee.CreateEmployeeDTO;
 import com.bakaibank.booking.dto.employee.EmployeeDTO;
+import com.bakaibank.booking.dto.employee.EmployeeRolesDTO;
 import com.bakaibank.booking.dto.position.PositionDTO;
 import com.bakaibank.booking.dto.team.TeamDTO;
 import com.bakaibank.booking.entity.Employee;
 import com.bakaibank.booking.entity.Position;
+import com.bakaibank.booking.entity.Role;
 import com.bakaibank.booking.entity.Team;
 import com.bakaibank.booking.repository.PositionRepository;
 import com.bakaibank.booking.repository.TeamRepository;
@@ -15,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Component
 public class EmployeeConvertersManager {
@@ -76,6 +79,21 @@ public class EmployeeConvertersManager {
                         employeeDTO.getMiddleName(),
                         position,
                         team
+                );
+            }
+        };
+    }
+
+    public static Converter<Employee, EmployeeRolesDTO> employeeToEmployeeRolesDTOConverter() {
+        return new Converter<>() {
+            @Override
+            public EmployeeRolesDTO convert(MappingContext<Employee, EmployeeRolesDTO> mappingContext) {
+                Employee employee = mappingContext.getSource();
+
+                return new EmployeeRolesDTO(
+                        employee.getRoles().stream()
+                                .map(Role::getName)
+                                .collect(Collectors.toSet())
                 );
             }
         };

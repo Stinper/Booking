@@ -1,6 +1,7 @@
 package com.bakaibank.booking.repository;
 
 import com.bakaibank.booking.entity.Employee;
+import com.bakaibank.booking.entity.Role;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -22,6 +23,10 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     @Query("SELECT e FROM Employee e WHERE e.id = :id")
     Optional<Employee> findByIdWithPositionAndTeam(@Param("id") Long id);
 
+    @EntityGraph(attributePaths = "roles", type = EntityGraph.EntityGraphType.LOAD)
+    @Query("SELECT e FROM Employee e WHERE e.id = :id")
+    Optional<Employee> findByIdWithRoles(Long id);
+
     List<Employee> findAllByUsernameIn(Collection<String> usernames);
 
     @Query("SELECT e.username FROM Employee e WHERE e.username IN :usernames")
@@ -30,4 +35,6 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     boolean existsByPosition_Id(Long id);
 
     boolean existsByTeam_Id(Long id);
+
+    boolean existsByRoles(List<Role> roles);
 }

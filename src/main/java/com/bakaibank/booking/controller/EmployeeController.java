@@ -1,12 +1,15 @@
 package com.bakaibank.booking.controller;
 
+import com.bakaibank.booking.core.BookingUserDetails;
 import com.bakaibank.booking.core.security.AdminRoleRequired;
 import com.bakaibank.booking.dto.employee.CreateEmployeeDTO;
 import com.bakaibank.booking.dto.employee.EmployeeDTO;
+import com.bakaibank.booking.dto.employee.EmployeeRolesDTO;
 import com.bakaibank.booking.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,6 +36,11 @@ public class EmployeeController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @GetMapping("/me")
+    public EmployeeDTO getAuthenticatedEmployeeInfo(@AuthenticationPrincipal BookingUserDetails userDetails) {
+        return employeeService.findById(userDetails.getId()).orElse(null);
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public EmployeeDTO createEmployee(@RequestBody CreateEmployeeDTO createEmployeeDTO) {
@@ -48,5 +56,17 @@ public class EmployeeController {
                     return ResponseEntity.ok(employee);
                 })
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/{id}/roles")
+    @AdminRoleRequired
+    public EmployeeRolesDTO findEmployeeRoles(@PathVariable Long id) {
+        return employeeService.findRolesById(id);
+    }
+
+    @PutMapping("/{id}/roles")
+    @AdminRoleRequired
+    public EmployeeRolesDTO updateEmployeeRoles(@PathVariable Long id, @RequestBody EmployeeRolesDTO roles) {
+        return employeeService.updateRoles(id, roles);
     }
 }

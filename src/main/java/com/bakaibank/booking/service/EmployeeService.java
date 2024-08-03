@@ -2,6 +2,7 @@ package com.bakaibank.booking.service;
 
 import com.bakaibank.booking.dto.employee.CreateEmployeeDTO;
 import com.bakaibank.booking.dto.employee.EmployeeDTO;
+import com.bakaibank.booking.dto.employee.EmployeeRolesDTO;
 import jakarta.validation.Valid;
 
 import java.util.List;
@@ -12,4 +13,6 @@ public interface EmployeeService {
     Optional<EmployeeDTO> findById(Long id);
     EmployeeDTO save(@Valid CreateEmployeeDTO createEmployeeDTO);
     void deleteById(Long id);
+    EmployeeRolesDTO findRolesById(Long employeeId);
+    EmployeeRolesDTO updateRoles(Long employeeId, @Valid EmployeeRolesDTO roles);
 }
