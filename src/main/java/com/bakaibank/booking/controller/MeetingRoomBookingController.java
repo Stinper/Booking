@@ -49,14 +49,14 @@ public class MeetingRoomBookingController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or @meetingRoomBookingSecurityService.canUpdateMeetingRoomBooking(#id, principal)")
+    @PreAuthorize("hasRole(@authoritiesNameProvider.roleAdmin()) or @meetingRoomBookingSecurityService.canUpdateMeetingRoomBooking(#id, principal)")
     public MeetingRoomBookingDTO updateMeetingRoomBookingById(@PathVariable Long id,
                                                               @RequestBody UpdateMeetingRoomBookingDTO updateMeetingRoomBookingDTO) {
         return meetingRoomBookingService.update(id, updateMeetingRoomBookingDTO);
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or @meetingRoomBookingSecurityService.canDeleteMeetingRoomBooking(#id, principal)")
+    @PreAuthorize("hasRole(@authoritiesNameProvider.roleAdmin()) or @meetingRoomBookingSecurityService.canDeleteMeetingRoomBooking(#id, principal)")
     public ResponseEntity<?> deleteRoomBookingById(@PathVariable Long id) {
         return meetingRoomBookingService.findById(id)
                 .map(meetingRoomBooking -> {

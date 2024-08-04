@@ -1,5 +1,6 @@
 package com.bakaibank.booking.config;
 
+import com.bakaibank.booking.core.security.AuthoritiesNameProvider;
 import com.bakaibank.booking.core.security.JwtAuthenticationFilter;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
@@ -105,7 +106,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public RoleHierarchy roleHierarchy() {
-        return RoleHierarchyImpl.fromHierarchy("ROLE_ADMIN > ROLE_USER");
+    public RoleHierarchy roleHierarchy(AuthoritiesNameProvider authoritiesNameProvider) {
+        return authoritiesNameProvider.roleHierarchy();
     }
 }

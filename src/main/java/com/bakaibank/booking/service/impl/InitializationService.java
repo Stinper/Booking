@@ -11,8 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Отвечает за инициализацию ролей и учетной записи администратора при первом запуске приложения
@@ -56,7 +56,7 @@ public class InitializationService {
                     adminPassword,
                     adminFirstName,
                     adminLastName,
-                    new HashSet<>(rolesNames)
+                    Set.of(authoritiesNameProvider.roleAdmin())
             );
 
             employeeService.save(dto);
