@@ -43,6 +43,7 @@ public class EmployeeController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @AdminRoleRequired
     public EmployeeDTO createEmployee(@RequestBody CreateEmployeeDTO createEmployeeDTO) {
         return employeeService.save(createEmployeeDTO);
     }

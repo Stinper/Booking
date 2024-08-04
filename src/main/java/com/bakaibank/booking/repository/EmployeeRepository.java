@@ -37,4 +37,8 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     boolean existsByTeam_Id(Long id);
 
     boolean existsByRoles(List<Role> roles);
+
+    @Query("SELECT CASE WHEN COUNT(e) > 0 THEN true ELSE false END" +
+            " FROM Employee e")
+    boolean existsAny();
 }

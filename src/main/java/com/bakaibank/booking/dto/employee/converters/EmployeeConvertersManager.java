@@ -10,27 +10,24 @@ import com.bakaibank.booking.entity.Position;
 import com.bakaibank.booking.entity.Role;
 import com.bakaibank.booking.entity.Team;
 import com.bakaibank.booking.repository.PositionRepository;
+import com.bakaibank.booking.repository.RoleRepository;
 import com.bakaibank.booking.repository.TeamRepository;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.Converter;
 import org.modelmapper.spi.MappingContext;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
+@RequiredArgsConstructor
 public class EmployeeConvertersManager {
     private final PositionRepository positionRepository;
-
     private final TeamRepository teamRepository;
-
-    @Autowired
-    public EmployeeConvertersManager(PositionRepository positionRepository,
-                                     TeamRepository teamRepository) {
-        this.positionRepository = positionRepository;
-        this.teamRepository = teamRepository;
-    }
+    private final RoleRepository roleRepository;
 
     public static Converter<Employee, EmployeeDTO> employeeToEmployeeDTOConverter() {
         return new Converter<>() {
@@ -70,6 +67,11 @@ public class EmployeeConvertersManager {
                 if (employeeDTO.getTeamId() != null)
                     team = teamRepository.findById(employeeDTO.getTeamId()).orElse(null);
 
+                List<Role> roles = new ArrayList<>();
+
+                if (!employeeDTO.getRoles().isEmpty())
+                    roles = roleRepository.findByNameIn(employeeDTO.getRoles());
+
                 return new Employee(
                         employeeDTO.getUsername(),
                         employeeDTO.getEmail(),
@@ -78,7 +80,8 @@ public class EmployeeConvertersManager {
                         employeeDTO.getLastName(),
                         employeeDTO.getMiddleName(),
                         position,
-                        team
+                        team,
+                        roles
                 );
             }
         };

@@ -49,6 +49,13 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public EmployeeDTO save(@Valid CreateEmployeeDTO createEmployeeDTO) {
+        EmployeeRolesDTO roles = new EmployeeRolesDTO(createEmployeeDTO.getRoles());
+        Errors errors = new BeanPropertyBindingResult(roles, "createEmployeeRolesErrors");
+        employeeRolesValidator.validate(roles, errors);
+
+        if(errors.hasErrors())
+            throw new ValidationException(errors);
+
         createEmployeeDTO.setPassword(passwordEncoder.encode(createEmployeeDTO.getPassword()));
 
         Employee employee = employeeRepository.save(modelMapper.map(createEmployeeDTO, Employee.class));
@@ -74,7 +81,6 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Сотрудник с таким ID не найден"));
 
         Errors errors = new BeanPropertyBindingResult(roles, "updateEmployeeRolesErrors");
-        employeeRolesValidator.setUpdatableEmployee(employee);
         employeeRolesValidator.validate(roles, errors);
 
         if(errors.hasErrors())

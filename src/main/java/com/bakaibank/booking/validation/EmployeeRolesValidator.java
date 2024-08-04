@@ -1,7 +1,6 @@
 package com.bakaibank.booking.validation;
 
 import com.bakaibank.booking.dto.employee.EmployeeRolesDTO;
-import com.bakaibank.booking.entity.Employee;
 import com.bakaibank.booking.entity.Role;
 import com.bakaibank.booking.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +17,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EmployeeRolesValidator implements Validator {
     private final RoleRepository roleRepository;
-    private Employee updatableEmployee;
 
     @Override
     public boolean supports(Class<?> clazz) {
@@ -27,7 +25,6 @@ public class EmployeeRolesValidator implements Validator {
 
     @Override
     public void validate(Object target, Errors errors) {
-        if(updatableEmployee == null) throw new RuntimeException("updatableEmployee не может быть NULL");
         EmployeeRolesDTO dto = (EmployeeRolesDTO) target;
 
         if(!validateAllRolesExists(dto.getRoles(), errors)) return;

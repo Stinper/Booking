@@ -53,7 +53,7 @@ public class Employee {
     private List<Booking> bookings = new ArrayList<>();
 
     public Employee(String username, String email, String password, String firstName, String lastName,
-                    String middleName, Position position, Team team) {
+                    String middleName, Position position, Team team, List<Role> roles) {
         this.username = username;
         this.email = email;
         this.password = password;
@@ -62,5 +62,6 @@ public class Employee {
         this.middleName = middleName;
         this.position = position;
         this.team = team;
+        this.roles = roles;
     }
 }
