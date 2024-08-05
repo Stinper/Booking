@@ -38,6 +38,10 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
     boolean existsByRoles(List<Role> roles);
 
+    boolean existsByUsernameIgnoreCase(String username);
+
+    boolean existsByEmailIgnoreCase(String email);
+
     @Query("SELECT CASE WHEN COUNT(e) > 0 THEN true ELSE false END" +
             " FROM Employee e")
     boolean existsAny();

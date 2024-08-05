@@ -6,28 +6,14 @@ import com.bakaibank.booking.dto.employee.EmployeeRolesDTO;
 import com.bakaibank.booking.dto.position.PositionDTO;
 import com.bakaibank.booking.dto.team.TeamDTO;
 import com.bakaibank.booking.entity.Employee;
-import com.bakaibank.booking.entity.Position;
 import com.bakaibank.booking.entity.Role;
-import com.bakaibank.booking.entity.Team;
-import com.bakaibank.booking.repository.PositionRepository;
-import com.bakaibank.booking.repository.RoleRepository;
-import com.bakaibank.booking.repository.TeamRepository;
-import lombok.RequiredArgsConstructor;
 import org.modelmapper.Converter;
 import org.modelmapper.spi.MappingContext;
-import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Component
-@RequiredArgsConstructor
 public class EmployeeConvertersManager {
-    private final PositionRepository positionRepository;
-    private final TeamRepository teamRepository;
-    private final RoleRepository roleRepository;
 
     public static Converter<Employee, EmployeeDTO> employeeToEmployeeDTOConverter() {
         return new Converter<>() {
@@ -54,23 +40,11 @@ public class EmployeeConvertersManager {
         );
     }
 
-    public Converter<CreateEmployeeDTO, Employee> createEmployeeDTOToEmployeeConverter() {
+    public static Converter<CreateEmployeeDTO, Employee> createEmployeeDTOToEmployeeConverter() {
         return new Converter<>() {
             @Override
             public Employee convert(MappingContext<CreateEmployeeDTO, Employee> mappingContext) {
                 CreateEmployeeDTO employeeDTO = mappingContext.getSource();
-                Position position = null; Team team = null;
-
-                if (employeeDTO.getPositionId() != null)
-                    position = positionRepository.findById(employeeDTO.getPositionId()).orElse(null);
-
-                if (employeeDTO.getTeamId() != null)
-                    team = teamRepository.findById(employeeDTO.getTeamId()).orElse(null);
-
-                List<Role> roles = new ArrayList<>();
-
-                if (!employeeDTO.getRoles().isEmpty())
-                    roles = roleRepository.findByNameIn(employeeDTO.getRoles());
 
                 return new Employee(
                         employeeDTO.getUsername(),
@@ -78,10 +52,7 @@ public class EmployeeConvertersManager {
                         employeeDTO.getPassword(),
                         employeeDTO.getFirstName(),
                         employeeDTO.getLastName(),
-                        employeeDTO.getMiddleName(),
-                        position,
-                        team,
-                        roles
+                        employeeDTO.getMiddleName()
                 );
             }
         };

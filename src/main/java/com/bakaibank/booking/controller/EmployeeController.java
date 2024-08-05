@@ -5,6 +5,7 @@ import com.bakaibank.booking.core.security.AdminRoleRequired;
 import com.bakaibank.booking.dto.employee.CreateEmployeeDTO;
 import com.bakaibank.booking.dto.employee.EmployeeDTO;
 import com.bakaibank.booking.dto.employee.EmployeeRolesDTO;
+import com.bakaibank.booking.dto.employee.UpdateEmployeeDTO;
 import com.bakaibank.booking.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -46,6 +47,12 @@ public class EmployeeController {
     @AdminRoleRequired
     public EmployeeDTO createEmployee(@RequestBody CreateEmployeeDTO createEmployeeDTO) {
         return employeeService.save(createEmployeeDTO);
+    }
+
+    @PutMapping("/{id}")
+    @AdminRoleRequired
+    public EmployeeDTO updateEmployeeById(@PathVariable Long id, @RequestBody UpdateEmployeeDTO updateEmployeeDTO) {
+        return employeeService.update(id, updateEmployeeDTO);
     }
 
     @DeleteMapping("/{id}")

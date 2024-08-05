@@ -1,14 +1,15 @@
 package com.bakaibank.booking.service.impl;
 
-import com.bakaibank.booking.dto.employee.CreateEmployeeDTO;
-import com.bakaibank.booking.dto.employee.EmployeeDTO;
-import com.bakaibank.booking.dto.employee.EmployeeRolesDTO;
+import com.bakaibank.booking.dto.employee.*;
 import com.bakaibank.booking.entity.Employee;
 import com.bakaibank.booking.exceptions.ValidationException;
 import com.bakaibank.booking.repository.EmployeeRepository;
+import com.bakaibank.booking.repository.PositionRepository;
 import com.bakaibank.booking.repository.RoleRepository;
+import com.bakaibank.booking.repository.TeamRepository;
 import com.bakaibank.booking.service.EmployeeService;
-import com.bakaibank.booking.validation.EmployeeRolesValidator;
+import com.bakaibank.booking.validation.employee.CreateEmployeeValidator;
+import com.bakaibank.booking.validation.employee.UpdateEmployeeValidator;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -31,7 +32,10 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
-    private final EmployeeRolesValidator employeeRolesValidator;
+    private final CreateEmployeeValidator createEmployeeValidator;
+    private final UpdateEmployeeValidator updateEmployeeValidator;
+    private final TeamRepository teamRepository;
+    private final PositionRepository positionRepository;
 
     @Override
     public List<EmployeeDTO> findAll() {
@@ -49,17 +53,41 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public EmployeeDTO save(@Valid CreateEmployeeDTO createEmployeeDTO) {
-        EmployeeRolesDTO roles = new EmployeeRolesDTO(createEmployeeDTO.getRoles());
-        Errors errors = new BeanPropertyBindingResult(roles, "createEmployeeRolesErrors");
-        employeeRolesValidator.validate(roles, errors);
+        Errors errors = new BeanPropertyBindingResult(createEmployeeDTO, "createEmployeeErrors");
+        createEmployeeValidator.validate(createEmployeeDTO, errors);
 
         if(errors.hasErrors())
             throw new ValidationException(errors);
 
         createEmployeeDTO.setPassword(passwordEncoder.encode(createEmployeeDTO.getPassword()));
+        Employee employee = modelMapper.map(createEmployeeDTO, Employee.class);
 
-        Employee employee = employeeRepository.save(modelMapper.map(createEmployeeDTO, Employee.class));
-        return modelMapper.map(employee, EmployeeDTO.class);
+        this.setEmployeePositionAndTeamAndRoles(employee, createEmployeeDTO);
+
+        return modelMapper.map(employeeRepository.save(employee), EmployeeDTO.class);
+    }
+
+    @Override
+    public EmployeeDTO update(Long employeeId, @Valid UpdateEmployeeDTO updateEmployeeDTO) throws ResponseStatusException {
+        Employee employee = employeeRepository.findByIdWithPositionAndTeam(employeeId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Сотрудник с таким ID не найден"));
+
+        Errors errors = new BeanPropertyBindingResult(updateEmployeeDTO, "updateEmployeeErrors");
+        updateEmployeeValidator.setUpdatableEmployee(employee);
+        updateEmployeeValidator.validate(updateEmployeeDTO, errors);
+
+        if(errors.hasErrors())
+            throw new ValidationException(errors);
+
+        employee.setUsername(updateEmployeeDTO.getUsername());
+        employee.setEmail(updateEmployeeDTO.getEmail());
+        employee.setFirstName(updateEmployeeDTO.getFirstName());
+        employee.setLastName(updateEmployeeDTO.getLastName());
+        employee.setMiddleName(updateEmployeeDTO.getMiddleName());
+
+        this.setEmployeePositionAndTeamAndRoles(employee, updateEmployeeDTO);
+
+        return modelMapper.map(employeeRepository.save(employee), EmployeeDTO.class);
     }
 
     @Override
@@ -81,12 +109,28 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Сотрудник с таким ID не найден"));
 
         Errors errors = new BeanPropertyBindingResult(roles, "updateEmployeeRolesErrors");
-        employeeRolesValidator.validate(roles, errors);
+        createEmployeeValidator.validateAllRolesExists(roles.getRoles(), errors);
 
         if(errors.hasErrors())
             throw new ValidationException(errors);
 
         employee.setRoles(roleRepository.findByNameIn(roles.getRoles()));
         return modelMapper.map(employeeRepository.save(employee), EmployeeRolesDTO.class);
+    }
+
+    private void setEmployeePositionAndTeamAndRoles(Employee employee, AbstractEmployeeDTO dto) {
+        employee.setTeam(
+                Optional.ofNullable(dto.getTeamId())
+                        .flatMap(teamRepository::findById)
+                        .orElse(null)
+        );
+
+        employee.setPosition(
+                Optional.ofNullable(dto.getPositionId())
+                        .flatMap(positionRepository::findById)
+                        .orElse(null)
+        );
+
+        employee.setRoles(roleRepository.findByNameIn(dto.getRoles()));
     }
 }

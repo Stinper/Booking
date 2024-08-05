@@ -16,7 +16,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @RequiredArgsConstructor
 public class ModelMapperConfig {
-    private final EmployeeConvertersManager employeeConvertersManager;
     private final BookingConvertersManager bookingConvertersManager;
     private final MeetingRoomBookingConvertersManager meetingRoomBookingConvertersManager;
     private final PlaceLockConvertersManager placeLockConvertersManager;
@@ -26,7 +25,7 @@ public class ModelMapperConfig {
         ModelMapper modelMapper = new ModelMapper();
 
         modelMapper.addConverter(EmployeeConvertersManager.employeeToEmployeeDTOConverter());
-        modelMapper.addConverter(employeeConvertersManager.createEmployeeDTOToEmployeeConverter());
+        modelMapper.addConverter(EmployeeConvertersManager.createEmployeeDTOToEmployeeConverter());
         modelMapper.addConverter(EmployeeConvertersManager.employeeToEmployeeRolesDTOConverter());
 
         modelMapper.addConverter(PlaceConvertersManager.placeToPlaceDTOConverter());
