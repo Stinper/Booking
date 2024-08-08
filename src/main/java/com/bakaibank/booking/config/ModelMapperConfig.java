@@ -7,6 +7,7 @@ import com.bakaibank.booking.dto.meetingroom.converters.MeetingRoomConvertersMan
 import com.bakaibank.booking.dto.place.converters.PlaceConvertersManager;
 import com.bakaibank.booking.dto.placelock.converters.PlaceLockConvertersManager;
 import com.bakaibank.booking.dto.position.converters.PositionConvertersManager;
+import com.bakaibank.booking.dto.schedule.converters.ScheduleConvertersManager;
 import com.bakaibank.booking.dto.team.converters.TeamConvertersManager;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -19,6 +20,7 @@ public class ModelMapperConfig {
     private final BookingConvertersManager bookingConvertersManager;
     private final MeetingRoomBookingConvertersManager meetingRoomBookingConvertersManager;
     private final PlaceLockConvertersManager placeLockConvertersManager;
+    private final ScheduleConvertersManager scheduleConvertersManager;
 
     @Bean
     public ModelMapper modelMapper() {
@@ -49,6 +51,9 @@ public class ModelMapperConfig {
 
         modelMapper.addConverter(PlaceLockConvertersManager.placeLockToPlaceLockDTOConverter());
         modelMapper.addConverter(placeLockConvertersManager.createPlaceLockDTOToPlaceLockConverter());
+
+        modelMapper.addConverter(ScheduleConvertersManager.toScheduleDTO);
+        modelMapper.addConverter(scheduleConvertersManager.toSchedule);
 
         return modelMapper;
     }

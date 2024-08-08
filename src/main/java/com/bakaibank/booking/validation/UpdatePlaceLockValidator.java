@@ -5,6 +5,7 @@ import com.bakaibank.booking.entity.PlaceLock;
 import com.bakaibank.booking.repository.BookingRepository;
 import com.bakaibank.booking.repository.EmployeeRepository;
 import com.bakaibank.booking.repository.PlaceLockRepository;
+import com.bakaibank.booking.repository.ScheduleRepository;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -21,8 +22,9 @@ public class UpdatePlaceLockValidator extends AbstractPlaceLockValidator impleme
     @Autowired
     public UpdatePlaceLockValidator(PlaceLockRepository placeLockRepository,
                                     EmployeeRepository employeeRepository,
-                                    BookingRepository bookingRepository) {
-        super(placeLockRepository, employeeRepository, bookingRepository);
+                                    BookingRepository bookingRepository,
+                                    ScheduleRepository scheduleRepository) {
+        super(placeLockRepository, employeeRepository, bookingRepository, scheduleRepository);
     }
 
     @Override

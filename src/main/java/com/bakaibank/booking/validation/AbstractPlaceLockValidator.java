@@ -1,9 +1,11 @@
 package com.bakaibank.booking.validation;
 
 import com.bakaibank.booking.dto.placelock.AbstractPlaceLockDTO;
+import com.bakaibank.booking.entity.Schedule;
 import com.bakaibank.booking.repository.BookingRepository;
 import com.bakaibank.booking.repository.EmployeeRepository;
 import com.bakaibank.booking.repository.PlaceLockRepository;
+import com.bakaibank.booking.repository.ScheduleRepository;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -18,16 +20,19 @@ public abstract class AbstractPlaceLockValidator {
     protected PlaceLockRepository placeLockRepository;
     protected EmployeeRepository employeeRepository;
     protected BookingRepository bookingRepository;
+    protected ScheduleRepository scheduleRepository;
 
     @Value("${booking.places.locks.max.days}")
     protected Integer maxLockDaysAllowed;
 
     public AbstractPlaceLockValidator(PlaceLockRepository placeLockRepository,
                                       EmployeeRepository employeeRepository,
-                                      BookingRepository bookingRepository) {
+                                      BookingRepository bookingRepository,
+                                      ScheduleRepository scheduleRepository) {
         this.placeLockRepository = placeLockRepository;
         this.employeeRepository = employeeRepository;
         this.bookingRepository = bookingRepository;
+        this.scheduleRepository = scheduleRepository;
     }
 
 
@@ -35,6 +40,8 @@ public abstract class AbstractPlaceLockValidator {
         if(!validateLockDates(dto.getLockStartDate(), dto.getLockEndDate(), errors)) return;
 
         if(isPlaceBooked(dto.getPlaceId(), dto.getLockStartDate(), dto.getLockEndDate(), errors)) return;
+
+        if(isPlaceScheduled(dto.getPlaceId(), dto.getLockStartDate(), dto.getLockEndDate(), errors)) return;
 
         if(isPlaceAlreadyLocked(dto.getPlaceId(), dto.getLockStartDate(), dto.getLockEndDate(), errors)) return;
 
@@ -86,6 +93,28 @@ public abstract class AbstractPlaceLockValidator {
     protected boolean isPlaceBooked(Long placeId, LocalDate lockStartDate, LocalDate lockEndDate, Errors errors) {
         if(bookingRepository.existsByPlace_IdAndBookingDateBetween(placeId, lockStartDate, lockEndDate)) {
             errors.reject("placeHasBooking", "Блокировка пересекается с бронью места");
+            return true;
+        }
+
+        return false;
+    }
+
+
+    /**
+     * Проверка, существует ли для этого места в заданные даты расписание
+     * @param placeId ID места
+     * @param lockStartDate Дата начала блокировки
+     * @param lockEndDate Дата конца блокировки
+     * @param errors Список ошибок валидации
+     */
+    protected boolean isPlaceScheduled(Long placeId, LocalDate lockStartDate, LocalDate lockEndDate, Errors errors) {
+        Schedule schedule = scheduleRepository
+                .findFirstByPlace_IdAndDateBetweenOrderByDate(placeId, lockStartDate, lockEndDate)
+                .orElse(null);
+
+        if(schedule != null) {
+            errors.reject("placeHasSchedule", "Невозможно заблокировать это место на " +
+                    "этот период, т.к. для него существует расписание на дату " + schedule.getDate());
             return true;
         }
 

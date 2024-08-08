@@ -85,7 +85,8 @@ public class BookingServiceImpl implements BookingService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         Errors errors = new BeanPropertyBindingResult(updateBookingDTO, "updateBookingErrors");
-        placeBookingValidator.validatePlaceIsAvailable(place.getId(), booking.getBookingDate(), errors);
+        placeBookingValidator.validatePlaceIsAvailable(place.getId(), booking.getBookingDate(),
+                booking.getEmployee().getId(), errors);
 
         if(errors.hasErrors())
             throw new ValidationException(errors);

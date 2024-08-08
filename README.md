@@ -12,4 +12,8 @@
 6. В PostgreSQL создайте базу данных с именем, указанным в `SPRING_DATASOURCE_URL`
 7. Запустите приложение
 
+### Ссылки
+
+- [Диаграмма базы данных](https://drawsql.app/teams/team-1440/diagrams/booking)
+
 

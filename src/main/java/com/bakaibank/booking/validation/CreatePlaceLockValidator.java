@@ -4,6 +4,7 @@ import com.bakaibank.booking.dto.placelock.CreatePlaceLockDTO;
 import com.bakaibank.booking.repository.BookingRepository;
 import com.bakaibank.booking.repository.EmployeeRepository;
 import com.bakaibank.booking.repository.PlaceLockRepository;
+import com.bakaibank.booking.repository.ScheduleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -17,8 +18,9 @@ public class CreatePlaceLockValidator extends AbstractPlaceLockValidator impleme
     @Autowired
     public CreatePlaceLockValidator(PlaceLockRepository placeLockRepository,
                                     EmployeeRepository employeeRepository,
-                                    BookingRepository bookingRepository) {
-        super(placeLockRepository, employeeRepository, bookingRepository);
+                                    BookingRepository bookingRepository,
+                                    ScheduleRepository scheduleRepository) {
+        super(placeLockRepository, employeeRepository, bookingRepository, scheduleRepository);
     }
 
     @Override
