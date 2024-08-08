@@ -7,30 +7,27 @@ import org.modelmapper.Converter;
 import org.modelmapper.spi.MappingContext;
 
 public class PositionConvertersManager {
-    public static Converter<Position, PositionDTO> positionToPositionDTOConverter() {
-        return new Converter<>() {
-            @Override
-            public PositionDTO convert(MappingContext<Position, PositionDTO> mappingContext) {
-                Position position = mappingContext.getSource();
+    public static Converter<Position, PositionDTO> toPositionDTO = new Converter<>() {
+        @Override
+        public PositionDTO convert(MappingContext<Position, PositionDTO> mappingContext) {
+            Position source = mappingContext.getSource();
 
-                return new PositionDTO(
-                        position.getId(),
-                        position.getName()
-                );
-            }
-        };
-    }
+            return new PositionDTO(
+                    source.getId(),
+                    source.getName()
+            );
+        }
+    };
 
-    public static Converter<CreatePositionDTO, Position> createPositionDTOToPositionConverter() {
-        return new Converter<>() {
-            @Override
-            public Position convert(MappingContext<CreatePositionDTO, Position> mappingContext) {
-                CreatePositionDTO createPositionDTO = mappingContext.getSource();
+    public static Converter<CreatePositionDTO, Position> toPosition = new Converter<>() {
+        @Override
+        public Position convert(MappingContext<CreatePositionDTO, Position> mappingContext) {
+            CreatePositionDTO source = mappingContext.getSource();
 
-                return new Position(
-                        createPositionDTO.getName()
-                );
-            }
-        };
-    }
+            return new Position(
+                    source.getName()
+            );
+        }
+    };
+
 }

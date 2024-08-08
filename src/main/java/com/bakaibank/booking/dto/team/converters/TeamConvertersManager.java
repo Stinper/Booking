@@ -7,29 +7,26 @@ import org.modelmapper.Converter;
 import org.modelmapper.spi.MappingContext;
 
 public class TeamConvertersManager {
-    public static Converter<Team, TeamDTO> teamToTeamDTOConverter() {
-        return new Converter<>() {
-            @Override
-            public TeamDTO convert(MappingContext<Team, TeamDTO> mappingContext) {
-                Team team = mappingContext.getSource();
-                return new TeamDTO(
-                        team.getId(),
-                        team.getName()
-                );
-            }
-        };
-    }
+    public static Converter<Team, TeamDTO> toTeamDTO = new Converter<>() {
+        @Override
+        public TeamDTO convert(MappingContext<Team, TeamDTO> mappingContext) {
+            Team source = mappingContext.getSource();
 
-    public static Converter<CreateTeamDTO, Team> createTeamDTOToTeamConverter() {
-        return new Converter<>() {
-            @Override
-            public Team convert(MappingContext<CreateTeamDTO, Team> mappingContext) {
-                CreateTeamDTO createTeamDTO = mappingContext.getSource();
-                return new Team(
-                        createTeamDTO.getName()
-                );
-            }
-        };
-    }
+            return new TeamDTO(
+                    source.getId(),
+                    source.getName()
+            );
+        }
+    };
 
+    public static Converter<CreateTeamDTO, Team> toTeam = new Converter<>() {
+        @Override
+        public Team convert(MappingContext<CreateTeamDTO, Team> mappingContext) {
+            CreateTeamDTO source = mappingContext.getSource();
+
+            return new Team(
+                    source.getName()
+            );
+        }
+    };
 }

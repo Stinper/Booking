@@ -43,11 +43,11 @@ public class ModelMapperConfig {
         modelMapper.addConverter(MeetingRoomBookingConvertersManager.meetingRoomBookingToMeetingRoomBookingDTOConverter());
         modelMapper.addConverter(meetingRoomBookingConvertersManager.createMeetingRoomBookingDTOToMeetingRoomBookingConverter());
 
-        modelMapper.addConverter(PositionConvertersManager.positionToPositionDTOConverter());
-        modelMapper.addConverter(PositionConvertersManager.createPositionDTOToPositionConverter());
+        modelMapper.addConverter(PositionConvertersManager.toPositionDTO);
+        modelMapper.addConverter(PositionConvertersManager.toPosition);
 
-        modelMapper.addConverter(TeamConvertersManager.teamToTeamDTOConverter());
-        modelMapper.addConverter(TeamConvertersManager.createTeamDTOToTeamConverter());
+        modelMapper.addConverter(TeamConvertersManager.toTeamDTO);
+        modelMapper.addConverter(TeamConvertersManager.toTeam);
 
         modelMapper.addConverter(PlaceLockConvertersManager.placeLockToPlaceLockDTOConverter());
         modelMapper.addConverter(placeLockConvertersManager.createPlaceLockDTOToPlaceLockConverter());

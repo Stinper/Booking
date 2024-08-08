@@ -2,6 +2,7 @@ package com.bakaibank.booking.service.impl;
 
 import com.bakaibank.booking.dto.team.CreateTeamDTO;
 import com.bakaibank.booking.dto.team.TeamDTO;
+import com.bakaibank.booking.dto.team.UpdateTeamDTO;
 import com.bakaibank.booking.entity.Team;
 import com.bakaibank.booking.exceptions.RelatedEntityExistsException;
 import com.bakaibank.booking.repository.EmployeeRepository;
@@ -10,8 +11,10 @@ import com.bakaibank.booking.service.TeamService;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -51,6 +54,17 @@ public class TeamServiceImpl implements TeamService {
     public TeamDTO save(@Valid CreateTeamDTO createTeamDTO) {
         Team team = teamRepository.save(modelMapper.map(createTeamDTO, Team.class));
         return modelMapper.map(team, TeamDTO.class);
+    }
+
+    @Override
+    public TeamDTO update(Long teamId, @Valid UpdateTeamDTO updateTeamDTO) {
+        Team team = teamRepository
+                .findById(teamId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        team.setName(updateTeamDTO.getName());
+
+        return modelMapper.map(teamRepository.save(team), TeamDTO.class);
     }
 
     @Override

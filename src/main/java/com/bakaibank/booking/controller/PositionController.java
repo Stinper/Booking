@@ -3,6 +3,7 @@ package com.bakaibank.booking.controller;
 import com.bakaibank.booking.core.security.AdminRoleRequired;
 import com.bakaibank.booking.dto.position.CreatePositionDTO;
 import com.bakaibank.booking.dto.position.PositionDTO;
+import com.bakaibank.booking.dto.position.UpdatePositionDTO;
 import com.bakaibank.booking.exceptions.RelatedEntityExistsException;
 import com.bakaibank.booking.service.PositionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,12 @@ public class PositionController {
     @AdminRoleRequired
     public PositionDTO createPosition(@RequestBody CreatePositionDTO createPositionDTO) {
         return positionService.save(createPositionDTO);
+    }
+
+    @PutMapping("/{id}")
+    @AdminRoleRequired
+    public PositionDTO updatePositionById(@PathVariable Long id, @RequestBody UpdatePositionDTO updatePositionDTO) {
+        return positionService.update(id, updatePositionDTO);
     }
 
     @DeleteMapping("/{id}")

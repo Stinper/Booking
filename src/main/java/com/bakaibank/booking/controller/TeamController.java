@@ -3,6 +3,7 @@ package com.bakaibank.booking.controller;
 import com.bakaibank.booking.core.security.AdminRoleRequired;
 import com.bakaibank.booking.dto.team.CreateTeamDTO;
 import com.bakaibank.booking.dto.team.TeamDTO;
+import com.bakaibank.booking.dto.team.UpdateTeamDTO;
 import com.bakaibank.booking.exceptions.RelatedEntityExistsException;
 import com.bakaibank.booking.service.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,12 @@ public class TeamController {
     @AdminRoleRequired
     public TeamDTO createTeam(@RequestBody CreateTeamDTO createTeamDTO) {
         return teamService.save(createTeamDTO);
+    }
+
+    @PutMapping("/{id}")
+    @AdminRoleRequired
+    public TeamDTO updateTeamById(@PathVariable Long id, @RequestBody UpdateTeamDTO updateTeamDTO) {
+        return teamService.update(id, updateTeamDTO);
     }
 
     @DeleteMapping("/{id}")
